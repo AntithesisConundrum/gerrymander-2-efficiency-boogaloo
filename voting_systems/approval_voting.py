@@ -8,11 +8,15 @@ def approval_tally(voters, approve_proportion):
     """
     parties_to_votes = defaultdict(int)
     num_approved_parties = int(len(voters[0]) * approve_proportion) # Truncates
+    ballots = []
     for voter in voters:
         # Add a vote for the first num_approved_parties parties.
+        ballot = [None] * 2
         for i in xrange(num_approved_parties):
             parties_to_votes[voter[i]] += 1
-    return parties_to_votes
+            ballot[i] = voter[i]
+        ballots.append(ballot)
+    return parties_to_votes, ballots
 
 def approval_voting(voters, approve_proportion=0.5):
     """
@@ -22,7 +26,7 @@ def approval_voting(voters, approve_proportion=0.5):
         Loser WV is number of votes
     """
     # Tally the votes
-    parties_to_votes = approval_tally(voters, approve_proportion)
+    parties_to_votes, ballots = approval_tally(voters, approve_proportion)
 
     # Find the ordering
     ordering = order_parties(parties_to_votes)
