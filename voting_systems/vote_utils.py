@@ -36,3 +36,16 @@ def classic_wasted_vote(parties_to_votes):
     wasted_vote = dict(parties_to_votes)
     wasted_vote[winner] = parties_to_votes[winner] - (parties_to_votes[runner_up] + 1)
     return wasted_vote
+
+
+def calculate_wasted_ballot(parties_to_votes, ballots):
+    """
+
+    """
+    # Find the winner and the runner up
+    winner, runner_up = find_winner_and_runner_up(parties_to_votes)
+    ballots_for_winner = 0
+    #calculate the number of times the winner appears in ballots
+    for ballot in ballots:
+        if winner in ballot:
+            ballots_for_winner += 1
