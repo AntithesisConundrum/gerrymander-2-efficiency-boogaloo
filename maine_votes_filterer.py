@@ -1,6 +1,12 @@
 """
-Filters out maine votes.
-Only counts voters that took the time to 
+Standardizes Maine voting records into something we can use.
+Takes each vote that orders the four official candidates,
+    * coding Hoar as a Libertarian
+    * coding Bond as a Green 
+and prints a standardized probability map.
+
+Data taken from the FINAL files posted here:
+https://www.maine.gov/sos/cec/elec/results/results18.html#Nov6
 """
 
 from collections import defaultdict
