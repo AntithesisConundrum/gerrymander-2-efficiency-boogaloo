@@ -30,8 +30,8 @@ def calculate_total_ratio(ordering, wasted_votes):
         loser_total += wasted_votes[loser]
     return float(wasted_votes[winner]) / loser_total
 
-if __name__ == "__main__":
-    out_file = open('data.csv', 'wb')
+def run_experiment(out_name, distribution):
+    out_file = open(out_name, 'wb')
     out_writer = csv.writer(out_file)
 
     out_writer.writerow(["Honest_FPTP_Winner",
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     num_trials = 100
     num_voters = 100000
     for _ in xrange(num_trials):
-        electorate = generate_voters(num_voters, BASIC_ORDER_PROBS)
+        electorate = generate_voters(num_voters, distribution)
 
         # Honest FPTP
         ordering, wasted_votes = honest_fptp(electorate)
@@ -113,3 +113,9 @@ if __name__ == "__main__":
             complete_stv_winner,
             complete_stv_top_two_ratio,
             complete_stv_total_ratio])
+
+if __name__ == "__main__":
+    run_experiment("basic_results.csv", BASIC_ORDER_PROBS)
+    run_experiment("maine_results.csv", MAINE_PROBS)
+
+
