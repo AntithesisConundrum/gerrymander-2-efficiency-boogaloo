@@ -8,16 +8,11 @@ def borda_tally(voters):
     """
     parties_to_points = defaultdict(int)
     num_candidates = len(voters[0])
-    ballots = []
     for voter in voters:
-        ballot = []
         for party_idx in xrange(num_candidates):
             party = voter[party_idx]
             parties_to_points[party] += (num_candidates - 1) - party_idx
-            if (len(ballot) < 2):
-                ballot.append(party)
-        ballots.append(ballot)
-    return parties_to_points, ballots
+    return parties_to_points
 
 def borda_count_vote(voters):
     """
@@ -25,7 +20,7 @@ def borda_count_vote(voters):
     Returns the winner and the "wasted points"
     """
     # Tally the votes
-    parties_to_points, ballots = borda_tally(voters)
+    parties_to_points = borda_tally(voters)
 
     # Find the ordering
     ordering = order_parties(parties_to_points)
