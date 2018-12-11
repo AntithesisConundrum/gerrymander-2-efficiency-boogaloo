@@ -8,7 +8,6 @@ from voting_systems.classic_stv import classic_single_transferrable_vote
 from voting_systems.complete_stv import complete_single_transferrable_vote
 from voting_systems.honest_fptp import honest_fptp
 from voting_systems.strategic_fptp import strategic_fptp
-from random import shuffle
 from collections import defaultdict
 
 def calculate_top_two_ratio(ordering, wasted_votes):
@@ -136,7 +135,25 @@ def run_full_experiment(out_name, distribution):
         "Classic_STV_Efficiency_Gap",
         "Complete_STV_Efficiency_Gap",
         "Wasted_Ballot_Efficiency_Gap",
-        ])
+    ])
+
+    systems = [
+        "Strategic_FPTP",
+        "Honest_FPTP",
+        "Approval",
+        "Borda",
+        "Classic_STV",
+        "Complete_STV",
+    ]
+
+    methods = {
+        "Strategic_FPTP": strategic_fptp,
+        "Honest_FPTP": honest_fptp,
+        "Approval": approval_voting,
+        "Borda": borda_count_vote,
+        "Classic_STV": classic_single_transferrable_vote,
+        "Complete_STV" : complete_single_transferrable_vote,
+    }
 
     num_trials = 1000
     num_districts = 10
@@ -155,19 +172,12 @@ def run_full_experiment(out_name, distribution):
             # Find district electorate
             district_electorate = electorate[district_no*voters_per_district:(district_no+1)*voters_per_district]
 
-            systems = [
-                (strategic_fptp, "Strategic_FPTP"),
-                (honest_fptp, "Honest_FPTP"),
-                (approval_voting, "Approval"),
-                (borda_count_vote, "Borda"),
-                (classic_single_transferrable_vote, "Classic_STV"),
-                (complete_single_transferrable_vote, "Complete_STV")
-            ]
-
-            for method, name in systems:
-                ordering, wasted_votes = method(district_electorate)
+            winner = {}
+            for system in systems:
+                ordering, wasted_votes = methods[system](district_electorate)
+                winner[system] = ordering[0]
                 for party in ordering:
-                    sys_party_wv[name][party] += wasted_votes[party]
+                    sys_party_wv[system][party] += wasted_votes[party]
 
         # For each district plan, calculate efficiency gap
         out_writer.writerow([calculate_efficiency_gap(sys_party_wv["Honest_FPTP"], num_voters),
