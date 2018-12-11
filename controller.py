@@ -129,12 +129,13 @@ def run_full_experiment(out_name, distribution):
     out_writer = csv.writer(out_file)
 
     out_writer.writerow([
-        "Honest_FPTP_Efficiency_Gap",
         "Strategic_FPTP_Efficiency_Gap",
+        "Honest_FPTP_Efficiency_Gap",
         "Approval_Efficiency_Gap",
         "Borda_Efficiency_Gap",
         "Classic_STV_Efficiency_Gap",
         "Complete_STV_Efficiency_Gap",
+        "Wasted_Ballot_Efficiency_Gap",
         ])
 
     num_trials = 1000
@@ -158,8 +159,8 @@ def run_full_experiment(out_name, distribution):
             district_electorate = electorate[district_no*voters_per_district:(district_no+1)*voters_per_district]
 
             systems = [
-                (honest_fptp, "Honest_FPTP"),
                 (strategic_fptp, "Strategic_FPTP"),
+                (honest_fptp, "Honest_FPTP"),
                 (approval_voting, "Approval"),
                 (borda_count_vote, "Borda"),
                 (classic_single_transferrable_vote, "Classic_STV"),
@@ -178,6 +179,7 @@ def run_full_experiment(out_name, distribution):
             calculate_efficiency_gap(sys_party_wv["Borda"], num_voters*(3+2+1)),
             calculate_efficiency_gap(sys_party_wv["Classic_STV"], num_voters),
             calculate_efficiency_gap(sys_party_wv["Complete_STV"], num_voters),
+            calculate_wasted_ballot_efficiency_gap(DEMOCRAT, electorate),
         ])
 
 if __name__ == "__main__":

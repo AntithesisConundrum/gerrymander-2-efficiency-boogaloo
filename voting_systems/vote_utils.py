@@ -38,14 +38,24 @@ def classic_wasted_vote(parties_to_votes):
     return wasted_vote
 
 
-def calculate_wasted_ballot(parties_to_votes, ballots):
+def calculate_wasted_ballot_efficiency_gap(winner, voters):
     """
-
+    Calculates the wasted ballot-based efficiency gap.
     """
-    # Find the winner and the runner up
-    winner, runner_up = find_winner_and_runner_up(parties_to_votes)
     ballots_for_winner = 0
-    #calculate the number of times the winner appears in ballots
-    for ballot in ballots:
-        if winner in ballot:
+    ballots_against_winner = 0
+
+    # We divide based on whether the winner was in the top half.
+    for voter in voters:
+        winner_found = False
+        for i in xrange(len(voter)/2):
+            if voter[i] == winner:
+                winner_found = True
+                break
+        if winner_found:
             ballots_for_winner += 1
+        else:
+            ballots_against_winner += 1
+    wasted_ballots_for_winner = ballots_for_winner - (ballots_against_winner-1)
+    wasted_ballots_against_winner = ballots_against_winner
+    return (wasted_ballots_for_winner-wasted_ballots_against_winner)/float(len(voters))
