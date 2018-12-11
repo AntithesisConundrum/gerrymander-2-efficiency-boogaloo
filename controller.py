@@ -34,7 +34,7 @@ def calculate_total_ratio(ordering, wasted_votes):
 def calculate_efficiency_gap(wasted_votes, num_voters):
     """
     Calculate EG given wasted votes.
-    Assumes DEMOCRAT won.
+    Calculates from the perspective of the DEMOCRAT.
     """
     winner = wasted_votes[DEMOCRAT]
     loser = wasted_votes[REPUBLICAN] + wasted_votes[LIBERTARIAN] + wasted_votes[GREEN]
@@ -149,9 +149,6 @@ def run_full_experiment(out_name, distribution):
 
         # Map each voting system to a mapping from party to WV
         sys_party_wv = defaultdict(lambda: defaultdict(int))
-
-        # Keep track of number of districts won by winning_party
-        districts_won = 0
 
         # For each district, calculate wasted vote
         for district_no in xrange(num_districts):
